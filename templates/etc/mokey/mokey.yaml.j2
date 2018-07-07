@@ -1,0 +1,239 @@
+---
+#------------------------------------------------------------------------------
+# Database connection
+#------------------------------------------------------------------------------
+dsn: "{{ mokey_config_dsn }}"
+
+#------------------------------------------------------------------------------
+# Database driver
+#------------------------------------------------------------------------------
+driver: "{{ mokey_confi_driver }}"
+
+#------------------------------------------------------------------------------
+# Secure webserver port to listen on
+#------------------------------------------------------------------------------
+port: {{ mokey_config_port }}
+
+#------------------------------------------------------------------------------
+# Insecure redirect host and port. If set will redirect http to https
+#------------------------------------------------------------------------------
+{% if mokey_config_insecure_redirect_port %}
+insecure_redirect_port: {{ mokey_config_insecure_redirect_port }}
+{% else %}
+# insecure_redirect_port: 80
+{% endif %}
+
+{% if mokey_config_insecure_redirect_host %}
+insecure_redirect_host: {{ mokey_config_insecure_redirect_host }}
+{% else %}
+# insecure_redirect_host: localhost
+{% endif %}
+
+#------------------------------------------------------------------------------
+# Webserver interface to listen on
+#------------------------------------------------------------------------------
+bind: "{{ mokey_config_bind }}"
+
+#------------------------------------------------------------------------------
+# SSL certificate
+#------------------------------------------------------------------------------
+{% if mokey_config_cert %}
+cert: {{ mokey_config_cert }}
+{% else %}
+# cert: "/path/to/cert"
+{% endif %}
+#------------------------------------------------------------------------------
+# SSL private key
+#-------------------------------------------------------------------
+{% if mokey_config_key %}
+key: {{ mokey_config_key }}
+{% else %}
+# key: "/path/to/key"
+{% endif %}
+
+#------------------------------------------------------------------------------
+# Min password length
+#------------------------------------------------------------------------------
+{% if mokey_config_min_passwd_len %}
+min_passwd_len: {{ mokey_config_min_passwd_len }}
+{% else %}
+# min_passwd_len: 8
+{% endif %}
+#------------------------------------------------------------------------------
+# Authentication key used for HMAC token signing and secure cookies
+#------------------------------------------------------------------------------
+auth_key: "{{ mokey_config_auth_key }}"
+
+#------------------------------------------------------------------------------
+# Encryption key used for encrypting cookies
+#------------------------------------------------------------------------------
+enc_key: "{{ mokey_config_enc_key }}"
+
+#------------------------------------------------------------------------------
+# Templates directory
+#------------------------------------------------------------------------------
+templates: /usr/share/mokey/templates
+
+#------------------------------------------------------------------------------
+# Force Two-Factor authentication on login. If enabled users will be required
+# to provide their security question (if OTP is disabled) in addition to their
+# password when logging in. Defaults to true
+#------------------------------------------------------------------------------
+
+force_2fa: {{ mokey_config_force_2fa }}
+
+#------------------------------------------------------------------------------
+# Require security question for password resets. If disabled, users will not be
+# required to enter their security question when resetting their password. They
+# will only need the link sent to their email address. Disabling this option is
+# not recommended. Defaults to true
+#------------------------------------------------------------------------------
+require_question_pwreset: {{ mokey_config_require_question_pwreset }}
+
+#------------------------------------------------------------------------------
+# FreeIPA server hostname (defaults to /etc/ipa/default.conf)
+#------------------------------------------------------------------------------
+{% if mokey_config_ipahost %}
+ipahost: {{ mokey_config_ipahost }}
+{% else %}
+# ipahost: "ipa.example.edu"
+{% endif %}
+
+#------------------------------------------------------------------------------
+# Keytab file for mokey (should have "Modify users and Reset passwords"
+# privilege in FreeIPA)
+#------------------------------------------------------------------------------
+keytab: "{{ mokey_config_keytab }}"
+
+#------------------------------------------------------------------------------
+# Enable rate limiting based on remote ip (requires redis)
+#------------------------------------------------------------------------------
+rate_limit: {{ mokey_config_rate_limit }}
+
+#------------------------------------------------------------------------------
+# Redis server (used for rate limiting)
+#------------------------------------------------------------------------------
+{% if mokey_config_redis %}
+redis: {{ mokey_config_redis }}
+{% else %}
+# redis: ":6379"
+{% endif %}
+
+#------------------------------------------------------------------------------
+# Max POST requests. This value sets a max limit on the number of POST requests
+# made in a given time period. The time is defined by "rate_limit_expire".
+#------------------------------------------------------------------------------
+{% if mokey_config_max_requests %}
+max_requests: {{ mokey_config_max_requests }}
+{% else %}
+# max_requests: 15
+{% endif %}
+
+#------------------------------------------------------------------------------
+# The expire time in seconds for the max_requests counter. By default the
+# number of post requests from a given IP address is limited to 15 requests per
+# hour.
+#------------------------------------------------------------------------------
+{% if mokey_config_rate_limit_expire %}
+rate_limit_expire: {{ mokey_config_rate_limit_expire }}
+{% else %}
+# rate_limit_expire: 3600
+{% endif %}
+
+#------------------------------------------------------------------------------
+# SMTP server
+#------------------------------------------------------------------------------
+smtp_host: "{{ mokey_config_smtp_host }}"
+
+#------------------------------------------------------------------------------
+# SMTP port
+#------------------------------------------------------------------------------
+smtp_port: {{ mokey_config_smtp_port }}
+
+#------------------------------------------------------------------------------
+# From address used when sending emails
+#------------------------------------------------------------------------------
+email_from: "{{ mokey_config_email_from }}"
+
+#------------------------------------------------------------------------------
+# Email signature used when sending emails
+#------------------------------------------------------------------------------
+email_sig: "{{ mokey_config_email_sig }}"
+
+#------------------------------------------------------------------------------
+# Base URL of mokey server. Used for links in emails
+#------------------------------------------------------------------------------
+email_link_base: "{{ mokey_config_email_link_base }}"
+
+#------------------------------------------------------------------------------
+# Subject prefix used when sending emails
+#------------------------------------------------------------------------------
+email_prefix: "{{ mokey_config_email_prefix }}"
+
+#------------------------------------------------------------------------------
+# Max age (in seconds) of setup account email tokens.
+#------------------------------------------------------------------------------
+setup_max_age: {{ mokey_config_setup_max_age }}
+
+#------------------------------------------------------------------------------
+# Max age (in seconds) of reset password email tokens.
+#------------------------------------------------------------------------------
+reset_max_age: {{ mokey_config_reset_max_age }}
+
+#------------------------------------------------------------------------------
+# Max attempts for password resets and account setup.
+#------------------------------------------------------------------------------
+max_attempts: {{ mokey_config_max_attempts }}
+
+#------------------------------------------------------------------------------
+# Sign emails using PGP/Mime
+#------------------------------------------------------------------------------
+pgp_sign: {{ mokey_config_pgp_sign }}
+
+#------------------------------------------------------------------------------
+# PGP private key
+#------------------------------------------------------------------------------
+{% if mokey_config_pgp_key %}
+pgp_key: "{{ mokey_config_max_attempts }}"
+{% else %}
+# pgp_key: "/path/to/key.gpg"
+{% endif %}
+
+#------------------------------------------------------------------------------
+# passphrase for PGP private key (if encrypted)
+#------------------------------------------------------------------------------
+{% if mokey_config_pgp_passphrase %}
+pgp_passphrase: "{{ mokey_config_pgp_passphrase }}"
+{% else %}
+# pgp_passphrase: "secret"
+{% endif %}
+
+#------------------------------------------------------------------------------
+# Developer mode
+#------------------------------------------------------------------------------
+develop: {{ mokey_config_develop }}
+
+#------------------------------------------------------------------------------
+# Hydra config
+#------------------------------------------------------------------------------
+# hydra_client_id: "consent-app"
+# hydra_client_secret: "consent-secret"
+# hydra_cluster_url: "https://localhost:4444"
+
+#------------------------------------------------------------------------------
+# Public oauth2 clients for Api Key access (requires Hydra)
+#------------------------------------------------------------------------------
+# enabled_api_client_ids:
+#   - openstack-api
+#   - mypublic-api
+#
+# openstack-api:
+#   name: "Openstack CLI"
+#   desc: "Access to Openstack CLI"
+#   scopes: openid
+#
+# mypublic-api:
+#   name: "Some other API"
+#   desc: "Access to some other API"
+#   scopes: openid
+...

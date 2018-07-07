@@ -1,0 +1,20 @@
+---
+
+- name: Install Mokey RPM
+  yum:
+    name: "{{ mokey_rpm_url }}"
+    state: present
+  when: mokey_install_method == "rpm"
+
+- name: Install Mokey
+  yum:
+    name: mokey-{{ mokey_version }}
+    state: present
+  when: mokey_install_method == "yum"
+
+- name: Create Mokey System User
+  user:
+    name: mokey
+    system: True
+    home: /usr/share/mokey
+    state: present

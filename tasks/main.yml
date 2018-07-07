@@ -1,0 +1,7 @@
+---
+# tasks file for mokey
+
+- import_tasks: mokey.yml
+- import_tasks: mokey-db.yml
+- import_tasks: mokey-ipa.yml
+- import_tasks: mokey-config.yml

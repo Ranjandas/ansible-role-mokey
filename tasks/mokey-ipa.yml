@@ -1,0 +1,46 @@
+---
+
+- name: Create Mokey IPA User 
+  ipa_user:
+    name: "{{ mokey_ipa_user_name }}"
+    givenname: "{{ mokey_ipa_user_firstname }}"
+    sn: "{{ mokey_ipa_user_lastname }}"
+    ipa_host: "{{ mokey_ipa_host }}"
+    ipa_port: "{{ mokey_ipa_port }}"
+    ipa_user: "{{ mokey_ipa_adminuser }}"
+    ipa_pass: "{{ mokey_ipa_adminpass }}"
+
+- name: Create Mokey IPA Role and Privilege
+  ipa_role:
+    name: "{{ mokey_ipa_role_name }}"
+    description: "{{ mokey_ipa_role_desc }}"
+    privilege:
+      - "{{ mokey_ipa_role_priv }}"
+    user:
+      - "{{ mokey_ipa_user_name }}"
+    state: present
+    ipa_host: "{{ mokey_ipa_host }}"
+    ipa_port: "{{ mokey_ipa_port }}"
+    ipa_user: "{{ mokey_ipa_adminuser }}"
+    ipa_pass: "{{ mokey_ipa_adminpass }}"
+
+- name: Create Keytab Directory
+  file:
+    name: "{{ mokey_keytab_dir }}"
+    owner: root
+    group: mokey
+    mode: "0750"
+    state: directory
+
+- name: Fetch Keytab from IPA Server
+  shell: echo "{{ mokey_ipa_adminpass }}" |  kinit "{{ mokey_ipa_adminuser }}" && ipa-getkeytab -s "{{ mokey_ipa_host }}" -p "{{ mokey_ipa_user_name }}" -k "{{ mokey_keytab_dir }}/{{ mokey_ipa_user_name }}.keytab" && kdestroy
+  args:
+    creates: "{{ mokey_keytab_dir }}/{{ mokey_ipa_user_name }}.keytab"
+
+- name: Set Permissions for Keytab
+  file:
+    name: "{{ mokey_keytab_dir }}/{{ mokey_ipa_user_name }}.keytab"
+    owner: root
+    group: mokey
+    mode: "0640"
+    state: file

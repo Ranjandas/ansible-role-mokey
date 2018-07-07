@@ -1,0 +1,17 @@
+---
+
+- name: Configure Mokey
+  template:
+    src: etc/mokey/mokey.yaml.j2
+    dest: /etc/mokey/mokey.yaml
+    owner: root
+    group: mokey
+    mode: "0640"
+  notify: Restart Mokey
+
+- name: Start and Enable Mokey
+  systemd:
+    name: mokey
+    enabled: True
+    state: started
+    

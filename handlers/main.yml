@@ -1,0 +1,7 @@
+---
+# handlers file for mokey
+
+- name: Restart Mokey
+  systemd:
+    name: mokey
+    state: restarted

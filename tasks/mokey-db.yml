@@ -1,0 +1,22 @@
+---
+
+- name: Create Mokey DB
+  mysql_db:
+    name: "{{ mokey_db_name }}"
+    state: present
+    login_user: "{{ mokey_db_user }}"
+    login_password: "{{ mokey_db_pass }}"
+    login_host: "{{ mokey_db_host }}"
+    login_port: "{{ mokey_db_port }}"
+  register: mokey_db_create
+
+- name: Import Mokey DB Schema
+  mysql_db:
+    name: "{{ mokey_db_name }}"
+    state: import
+    target: /usr/share/mokey/ddl/schema.sql
+    login_user: "{{ mokey_db_user }}"
+    login_password: "{{ mokey_db_pass }}"
+    login_host: "{{ mokey_db_host }}"
+    login_port: "{{ mokey_db_port }}"
+  when: mokey_db_create.changed
